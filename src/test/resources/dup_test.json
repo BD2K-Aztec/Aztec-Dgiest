@@ -1,0 +1,23 @@
+{
+  "codeRepoURL":"https://github.com/raquele/GeNNet",
+  "repoDescription":"Integrated platform for unifying scientific workflow management and graph databases for transcriptome data analysis",
+  "repoName":"GeNNet",
+  "suggestName":"GeNNet",
+  "repo":"github",
+  "description":"There are many steps in analyzing transcriptome data, from the acquisition of raw data to the selection of a subset of representative genes that explain a scientific hypothesis. The data produced can be represented as networks of interactions among genes and these may additionally be integrated with other biological databases, such as Protein-Protein Interactions, transcription factors and gene annotation. However, the results of these analyses remain fragmented, imposing difficulties, either for posterior inspection of results, or for meta-analysis by the incorporation of new related data. Integrating databases and tools into scientific workflows, orchestrating their execution, and managing the resulting data and its respective metadata are challenging tasks. Additionally, a great amount of effort is equally required to run in-silico experiments to structure and compose the information as needed for analysis. Different programs may need to be applied and different files are produced during the experiment cycle. In this context, the availability of a platform supporting experiment execution is paramount. We present GeNNet, an integrated transcriptome analysis platform that unifies scientific workflows with graph databases for selecting relevant genes according to the evaluated biological systems. It includes GeNNet-Wf, a scientific workflow that pre-loads biological data, pre-processes raw microarray data and conducts a series of analyses including normalization, differential expression inference, clusterization and gene set enrichment analysis. A user-friendly web interface, GeNNet-Web, allows for setting parameters, executing, and visualizing the results of GeNNet-Wf executions. To demonstrate the features of GeNNet, we performed case studies with data retrieved from GEO, particularly using a single-factor experiment in different analysis scenarios. As a result, we obtained differentially expressed genes for which biological functions were analyzed. The results are integrated into GeNNet-DB, a database about genes, clusters, experiments and their properties and relationships. The resulting graph database is explored with queries that demonstrate the expressiveness of this data model for reasoning about gene interaction networks. GeNNet is the first platform to integrate the analytical process of transcriptome data with graph databases. It provides a comprehensive set of tools that would otherwise be challenging for non-expert users to install and use. Developers can add new functionality to components of GeNNet. The derived data allows for testing previous hypotheses about an experiment and exploring new ones through the interactive graph database environment. It enables the analysis of different data on humans, rhesus, mice and rat coming from Affymetrix","language":["HTML"],"publicationDOI":["10.7717/peerj.3509"],
+  "publicationTitle":["GeNNet: an integrated platform for unifying scientific workflows and graph databases for transcriptome data analysis"],
+  "repoUpdatedDate":"2017-09-06T07:12:31Z",
+  "repoHomepage":"",
+  "institutions":["Academic editor Camillo Rosano","National Laboratory for Scientific Computing (LNCC)","National Institute of Infectology Evandro Chagas","National Institute of Cancer (INCA)","Computational Biology Keywords GeNNet"],
+  "URLs":["github.com/raquele/GeNNet","dx.doi.org/10.7717/peerj.3509#supplemental-information","cran.r-project.org/web/packages/RNeo4j","hub.docker.com/r/quelopes/gennet/","hub.docker.com","blog.docker.com/2016/08/docker-hub-hits-5-billion-pulls/"],
+  "license":"No License",
+  "repoCreationDate":"2016-12-15T13:26:55Z",
+  "_version_":1582910204530393088,
+  "name":"GeNNet",
+  "id":8,
+  "suggestNamePrefix":"GeNNet",
+  "repoDownloads":0,
+  "publicationDate":["0"],
+  "repoForks":0,
+  "authors":["Raquel L. Costa","Luiz Gadelha","Marcelo Ribeiro-Alves","Fábio Porto"]
+}

@@ -1,0 +1,246 @@
+package attributes.affiliations;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+public class Affiliations {
+
+    private List<String> m_affiliation;
+
+    public List<String> getAffiliations() {
+        return this.m_affiliation;
+    }
+
+    public Affiliations(JSONObject xmlJSONObj, boolean fromPMC) throws Exception {
+        if(fromPMC){
+            this.m_affiliation = extractAffiliationFromPMCXML(xmlJSONObj);
+        }
+        else{
+            this.m_affiliation = extractAffiliationFromCermineXML(xmlJSONObj);
+        }
+
+    }
+
+    private List<String> extractAffiliationFromCermineXML(JSONObject xmlJSONObj) {
+        ArrayList<String> arraylist = new ArrayList<String>();
+        try {
+            JSONObject article_meta = xmlJSONObj.getJSONObject("article").getJSONObject("front").getJSONObject("article-meta");
+
+            if (article_meta.has("contrib-group")) {
+                JSONObject group = article_meta.getJSONObject("contrib-group");
+                if (group.has("aff")) {
+                    Object item = group.get("aff");
+                    if (item instanceof JSONObject) {
+                        JSONObject affiliations = (JSONObject) item;
+                        String aff = affiliations.getString("institution");
+                        String[] arr = aff.split(",");
+                        String result = arr[arr.length - 1];
+                        if (!arraylist.contains(result)) {
+                            arraylist.add(result);
+                        }
+                    } else if (item instanceof JSONArray) {
+                        JSONArray affiliations = (JSONArray) item;
+
+                        for (int i = 0; i < affiliations.length(); i++) {
+                            if (affiliations.getJSONObject(i).has("institution")) {
+                                Object item2 = affiliations.getJSONObject(i).get("institution");
+
+                                if (item2 instanceof String) {
+                                    String aff = affiliations.getJSONObject(i).getString("institution");
+                                    String[] arr = aff.split(",");
+                                    String result = arr[arr.length - 1];
+                                    if (!arraylist.contains(result) && (!result.contains("Department") || !result.contains("Division"))) {
+                                        arraylist.add(result);
+                                    }
+                                } else if (item2 instanceof JSONArray) {
+                                    JSONArray arr = affiliations.getJSONObject(i).getJSONArray("institution");
+                                    String result = (String) arr.get(arr.length() - 1);
+                                    if (!arraylist.contains(result) && !result.contains("Department")) {
+                                        arraylist.add(result);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            return new ArrayList();
+        }
+        return arraylist;
+    }
+
+    private List<String> extractAffiliationFromPMCXML(JSONObject xmlJSONObj) {
+        ArrayList<String> arraylist = new ArrayList<String>();
+        JSONObject article_meta = xmlJSONObj.getJSONObject("article").getJSONObject("front").getJSONObject("article-meta");
+        if(article_meta.has("aff")){
+            Object item2 = null;
+            try {
+                item2 = article_meta.get("aff");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            arraylist = getAff(item2);
+            for (int i = 0; i < arraylist.size(); i++) {
+                arraylist.set(i, arraylist.get(i).trim());
+            }
+        }
+        if(article_meta.has("contrib-group")){
+            Object item3 = null;
+            try {
+                item3 = article_meta.get("contrib-group");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            if (item3 instanceof JSONArray) {
+                JSONArray group = (JSONArray) item3;
+                for(int j=0;j<group.length();j++) {
+                    JSONObject json = group.getJSONObject(j);
+                    Iterator<String> keys = json.keys();
+
+                    while (keys.hasNext()) {
+                        String key = keys.next();
+                        if (key.equals("aff")) {
+                            Object item2 = null;
+                            try {
+                                item2 = json.get(key);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            arraylist = getAff(item2);
+                            for (int i = 0; i < arraylist.size(); i++) {
+                                arraylist.set(i, arraylist.get(i).trim());
+                            }
+                        }
+                    }
+                }
+            }
+            else if (item3 instanceof JSONObject) {
+                JSONObject group = (JSONObject) item3;
+                if (!group.has("aff")) {
+                    group = xmlJSONObj.getJSONObject("article").getJSONObject("front").getJSONObject("article-meta");
+                }
+                if(group.has("aff")){
+                    Object item2 = null;
+                    try {
+                        item2 = group.get("aff");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    arraylist = getAff(item2);
+                    for (int i = 0; i < arraylist.size(); i++) {
+                        arraylist.set(i, arraylist.get(i).trim());
+                    }
+                }
+            }
+
+        }
+
+        return arraylist;
+    }
+
+    //helper function
+    private ArrayList<String> getAff(Object item2){
+        ArrayList<String> arraylist = new ArrayList<String>();
+        if (item2 instanceof JSONObject){
+            JSONObject aff = (JSONObject) item2;
+            Object item = null;
+            try {
+                item = aff.get("content");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            if (item instanceof String){
+                arraylist.add((String) item);
+            }
+            else if (item instanceof JSONArray){
+                JSONArray affiliations = (JSONArray) item;
+                for(int i=0;i<affiliations.length();i++)
+                {
+                    String result = affiliations.getString(i);
+                    if(!arraylist.contains(result)){
+                        arraylist.add(result);
+                    }
+                }
+            }
+        }
+        else if (item2 instanceof JSONArray){
+            JSONArray affiliations = (JSONArray) item2;
+            for(int i=0;i<affiliations.length();i++)
+            {
+                JSONObject result_object = affiliations.getJSONObject(i);
+                String result = "";
+                if(result_object.has("institution")){
+                    Object item = null;
+                    try {
+                        item = result_object.get("institution");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    if (item instanceof String){
+                        result = (String) item;
+                    }
+                    else if (item instanceof JSONArray){
+                        JSONArray arr = (JSONArray) item;
+                        for(int k=0;k<arr.length();k++){
+                            Object content = arr.get(k);
+                            if (content instanceof String){
+                                result+=(String) content;
+                            }
+                            else if (content instanceof JSONObject){
+                                JSONObject value = (JSONObject) content;
+                                if(value.has("content")){
+                                    result+=value.getString("content");
+                                }
+                            }
+                        }
+                    }
+                }
+                else if(result_object.has("content")){
+                    Object item = null;
+                    try {
+                        item = result_object.get("content");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    if (item instanceof String){
+                        result = (String) item;
+                    }
+                    else if (item instanceof JSONArray){
+                        JSONArray arr = (JSONArray) item;
+                        for(int k=0;k<arr.length();k++){
+                            result+=arr.get(k);
+                        }
+                    }
+                }
+                else if(result_object.has("addr-line")){
+                    Object item = null;
+                    try {
+                        item = result_object.get("addr-line");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    if (item instanceof String){
+                        result = (String) item;
+                    }
+                    else if (item instanceof JSONArray){
+                        JSONArray arr = (JSONArray) item;
+                        for(int k=0;k<arr.length();k++){
+                            result+=arr.get(k);
+                        }
+                    }
+                }
+                if(!arraylist.contains(result)){
+                    arraylist.add(result);
+                }
+            }
+        }
+        return arraylist;
+    }
+}
+
