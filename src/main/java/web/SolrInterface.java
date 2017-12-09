@@ -62,8 +62,12 @@ public class SolrInterface {
                 doc.addField("repoDescription", cs.getDescription());
                 doc.addField("license", cs.getLicense());
                 doc.addField("repoHomepage", cs.getHomepage());
-                doc.addField("repoUpdatedDate", cs.getDate_updated());
-                doc.addField("repoCreationDate", cs.getDate_created());
+                if(cs.getDate_updated()!="") {
+                    doc.addField("repoUpdatedDate", cs.getDate_updated());
+                }
+                if(cs.getDate_created()!="") {
+                    doc.addField("repoCreationDate", cs.getDate_created());
+                }
                 doc.addField("language", cs.getLanguage());
             }
 
@@ -71,6 +75,7 @@ public class SolrInterface {
             String cur_time = now.YEAR + "-" + now.MONTH + "-" + now.DAY_OF_MONTH + "T" +
                     now.HOUR + ":" + now.MINUTE + ":" + now.SECOND + "." + now.MILLISECOND + "Z";
 
+            System.out.println(doc);
             sc.add(doc);
             sc.commit();
             return true;

@@ -17,8 +17,8 @@ The Aztec-Digest repository contains code for the PDF upload service. It is a we
 - /src: All source code
   - /main: Code for web platform
     - /java
-      - attributes: code used to extract different attributes from the text
-      - web: code for creating web platform
+      - /attributes: code used to extract different attributes from the text
+      - /web: code for creating web platform
     - /resources
       - /templates: html pages for web platform
       - application.properties: The configurations for Spring Boot

@@ -20,16 +20,9 @@ import java.util.List;
 public class Application {
 
     public static void main(String[] args) {
-//        CodeStats cs = new CodeStats("www.github.com/PapenfussLab", "Clove");
-//        System.out.println("link:"+cs.getRepo_link());
-//        System.out.println("name:"+cs.getRepo_name());
 
-//        SolrInterface si = new SolrInterface();
-//        System.out.println(si.checkDup("10.1021/acs.analchem.6b04604", "https://github.com/mgleeming/Xenophile"));
-//        System.out.println(si.getID());
-        DupDetector dd = new DupDetector();
         AppThread app = new AppThread();
         SpringApplication.run(Application.class, args);
-        app.run();
+//        app.run();
     }
 }

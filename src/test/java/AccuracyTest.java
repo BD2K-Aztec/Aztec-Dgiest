@@ -43,7 +43,6 @@ public class AccuracyTest {
         DigestPDF result = new DigestPDF(fnm_files, f_filenames);
 
 
-
         result_json = result.getData();
     }
 
@@ -56,15 +55,19 @@ public class AccuracyTest {
             assertTrue("Tool is a duplicate", dup.isDuplicate(test_json));
             assertTrue("Doc2Vec index", dup.trainD2V(false));
             ArrayList<String> results = dup.getNearestN(test_json.getString("description"), 5);
+
+            boolean foundDup = false, foundSim = false;
             for(String result: results){
                 double score = dup.getSimilarity(test_json.getString("description"), result);
 
                 if(score>0.8){
-                    System.out.println("Duplicate tool: "+result);
+                    foundDup = true;
                 }else if(score>0.4){
-                    System.out.println("Similar tool: "+ result);
+                    foundSim = true;
                 }
             }
+            assertTrue("Found Duplicate", foundDup);
+            assertTrue("Found Similar Tool", foundSim);
 
         }catch(Exception e){
             e.printStackTrace();
